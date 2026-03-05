@@ -1,0 +1,155 @@
+# Database :-)
+
+mysql -u app_user -p
+SHOW DATABASES;
+USE demo_app;
+SELECT COUNT(*) FROM snort_alerts;
+SELECT id,event_time,alert_message,protocol,source_ip,destination_ip
+FROM snort_alerts
+ORDER BY id DESC
+LIMIT 10;
+
+
+# To show all the generated Alerts :-)
+
+CMD --> curl -i "http://192.168.100.20/AT_fast_alerts.log"
+BROWSER -- > http://192.168.100.20/AT_fast_alerts.log
+
+
+# KALI :-)
+
+sudo truncate -s 0 /var/log/snort/alert
+sudo ls -lh /var/log/snort/alert
+
+-- GO TO MYSQL :-
+USE demo_app;
+TRUNCATE TABLE snort_alerts;
+SELECT COUNT(*) FROM snort_alerts;
+
+
+THEN : 
+TERMINAL (1) --> sudo snort -i eth1 -c /etc/snort/snort.conf -l /var/log/snort -A fast
+TERMINAL (2) --> sudo tail -f /var/log/snort/alert
+TERMINAL (3) --> ping -c 5 192.168.100.10
+TERMINAL (4) --> sudo nmap -sS -p 22,80,445 192.168.100.10
+
+
+# POWERSHELL :-)
+Fetch + ingest :
+Invoke-WebRequest -Uri "http://192.168.100.20/AT_fast_alerts.log" -UseBasicParsing -OutFile "C:\MyProject\
+
+THEN : PowerShell.exe -ExecutionPolicy Bypass -File "C:\MyProject\ingest_raw.ps1"
+
+PROVE IN DB --> USE demo_app;
+SELECT COUNT(*) FROM snort_alerts;
+SELECT id,event_time,alert_message FROM snort_alerts ORDER BY id DESC LIMIT 5;
+
+
+
+
+POWERSHELL --> DASHBOARD 
+1- Invoke-WebRequest -Uri "http://192.168.100.20/AT_fast_alerts.log" -UseBasicParsing -OutFile "C:\MyProject\at_fast.log"
+2- PowerShell.exe -ExecutionPolicy Bypass -File "C:\MyProject\ingest_raw.ps1"
+
+
+
+
+
+
+
+# TO START OVER TEST SCENARIO FROM SCRATCH :-)
+
+1- ON KALI :
+sudo cp /var/log/snort/alert /var/log/snort/alert_demo_backup_$(date +%F_%H%M%S)
+sudo truncate -s 0 /var/log/snort/alert
+sudo ls -lh /var/log/snort/alert
+
+
+2- IN MYSQL :
+USE demo_app;
+TRUNCATE TABLE snort_alerts;
+SELECT COUNT(*) FROM snort_alerts;
+
+
+
+3- KALI : 
+ps aux | grep snort
+sudo kill -9 
+sudo snort -i eth1 -c /etc/snort/snort.conf -l /var/log/snort -A fast
+sudo tail -f /var/log/snort/alert
+ping -c 5 192.168.100.10
+sudo nmap -sS -p 22,80,445 192.168.100.10
+
+
+4- WINDOWS :
+Invoke-WebRequest -Uri "http://192.168.100.20/AT_fast_alerts.log" -UseBasicParsing -OutFile "C:\MyProject\at_fast.log"
+PowerShell.exe -ExecutionPolicy Bypass -File "C:\MyProject\ingest_raw.ps1"
+
+
+5- VERIFY DB MYSQL :
+USE demo_app;
+SELECT COUNT(*) FROM snort_alerts;
+SELECT id,event_time,alert_message FROM snort_alerts ORDER BY id DESC LIMIT 10;
+
+
+6- REFRESH DASHBOARD :
+http://192.168.100.10/admin_audit.php
+
+
+
+
+
+# SNORT CONF :-)
+sudo nano /etc/snort/snort.conf
+
+
+# SNORT RULES :-)
+sudo cat /etc/snort/rules/local.rules
+
+
+# SNORT TEST CONFIG :-)
+sudo snort -T -c /etc/snort/snort.conf -i eth1
+
+# SNORT LOGS :-)
+sudo ls -lh /var/log/snort
+sudo tail -n 20 /var/log/snort/alert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
